@@ -1,9 +1,8 @@
-Dir['./mixins/*.rb'].each {|file| require file }
+Dir['./mixins/*'].each {|file| require file }
 require 'dotenv/load'
 require 'discordrb'
 
 bot = Discordrb::Commands::CommandBot.new token: ENV['BOT_TOKEN'], client_id: ENV['CLIENT_ID'], prefix: '!'
-messenger = Messenger.new
 
 puts "#{bot.invite_url}"
 
@@ -15,9 +14,9 @@ end
 bot.command(:report, min_args: 2, max_args: 2, channels: [ENV['REPORT_CHANNEL'].to_i], description: 'Returns a report for #spent10 or #followtwo and the number of days in the past specified. Usage: !report #spent10 21') do |event, type, days|
   case type
   when '#spent10'
-    messenger.report(event: event, report_type: type, days: days)
+    Messenger.report(event: event, report_type: type, days: days)
   when '#followtwo'
-    messenger.report(event: event, report_type: type, days: days)
+    Messenger.report(event: event, report_type: type, days: days)
   else
     event.respond "I'm sorry Dave, I can't do that."
   end

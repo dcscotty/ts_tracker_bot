@@ -11,8 +11,7 @@ class PollManager
 
   def create
     poll = create_poll
-    poll_id = JSON.parse(poll.body)["id"]
-    @poll_link = poll_url(id: poll_id)
+    @poll_link = poll_url(id: JSON.parse(poll.body)["id"])
   end
 
   private

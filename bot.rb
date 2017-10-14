@@ -1,8 +1,10 @@
 Dir['./mixins/*'].each {|file| require file }
 require 'dotenv/load'
 require 'discordrb'
+require 'pry'
 
 bot = Discordrb::Commands::CommandBot.new token: ENV['BOT_TOKEN'], client_id: ENV['CLIENT_ID'], prefix: '!'
+ROLES = ENV['MODERATOR_ROLES'].split(',')
 
 puts "#{bot.invite_url}"
 
@@ -22,14 +24,14 @@ bot.command(:report, min_args: 2, max_args: 2, channels: [ENV['REPORT_CHANNEL'].
   end
 end
 
-bot.command(:createpoll, description: 'Creates a poll on strawpoll.me. Usage: !createpoll Title, Option A, Option B, Option C') do |event, *args|
+bot.command(:createpoll, required_roles: MODERATOR_ROLES, description: 'Creates a poll on strawpoll.me. Usage: !createpoll Title, Option A, Option B, Option C') do |event, *args|
   poll_arguments = args.join(' ').split(', ')
   @pm = PollManager.new(poll_args: poll_arguments)
   @pm.create # Creates the poll and sets the attribute poll_link/poll_results on @pm
   event.respond "Vote here: #{@pm.poll_link}"
 end
 
-bot.command(:poll, description: 'Returns the link to the last created poll') do |event|
+bot.command(:poll, required_roles: MODERATOR_ROLES, description: 'Returns the link to the last created poll') do |event|
   if @pm
     event.respond "The last created poll can be found here: #{@pm.poll_link}"
   else

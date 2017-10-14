@@ -1,7 +1,6 @@
 Dir['./mixins/*'].each {|file| require file }
 require 'dotenv/load'
 require 'discordrb'
-require 'pry'
 
 bot = Discordrb::Commands::CommandBot.new token: ENV['BOT_TOKEN'], client_id: ENV['CLIENT_ID'], prefix: '!'
 ROLES = ENV['MODERATOR_ROLES'].split(',')

@@ -23,14 +23,14 @@ bot.command(:report, min_args: 2, max_args: 2, channels: [ENV['REPORT_CHANNEL'].
   end
 end
 
-bot.command(:createpoll, required_roles: MODERATOR_ROLES, description: 'Creates a poll on strawpoll.me. Usage: !createpoll Title, Option A, Option B, Option C') do |event, *args|
+bot.command(:createpoll, required_roles: ROLES, description: 'Creates a poll on strawpoll.me. Usage: !createpoll Title, Option A, Option B, Option C') do |event, *args|
   poll_arguments = args.join(' ').split(', ')
   @pm = PollManager.new(poll_args: poll_arguments)
   @pm.create # Creates the poll and sets the attribute poll_link/poll_results on @pm
   event.respond "Vote here: #{@pm.poll_link}"
 end
 
-bot.command(:poll, required_roles: MODERATOR_ROLES, description: 'Returns the link to the last created poll') do |event|
+bot.command(:poll, required_roles: ROLES, description: 'Returns the link to the last created poll') do |event|
   if @pm
     event.respond "The last created poll can be found here: #{@pm.poll_link}"
   else

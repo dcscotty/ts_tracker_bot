@@ -1,8 +1,8 @@
 require 'sequel'
 
-DB = Sequel.sqlite('db/clips.db') # memory database, requires sqlite3
+CLIPS = Sequel.sqlite('db/reports.db') # memory database, requires sqlite3
 
-DB.create_table? :clips do
+CLIPS.create_table? :clips do
   primary_key :id
   String :parsed_message
   String :url

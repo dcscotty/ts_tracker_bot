@@ -1,8 +1,9 @@
 class MessageProcessor
   CHANNEL_PATTERN =   /<#([0-9]+)>/
   USER_PATTERN =      /<@!?([0-9]+)>/
-
-  attr_reader :bot, :parsed_message, :author, :mentions, :channels, :channel_origin
+  URL_PATTERN =       /https:\/\/clips.twitch.tv\/\S*/
+  
+  attr_reader :bot, :parsed_message, :author, :mentions, :channels, :channel_origin, :url
 
   def initialize(event:, bot:)
     @bot = bot
@@ -12,12 +13,17 @@ class MessageProcessor
     @parsed_message = rebuild_message(message: copied_message, users: @mentions, channels: @channels)
     @author = resolve_users(uids: [event.message.author.id])
     @channel_origin = resolve_channels(cids: [event.message.channel.id])
+    @url = parse_url(message: copied_message, pattern: URL_PATTERN)
   end
 
   def rebuild_message(message:, users:, channels:)
     resolved_message = sub_message_content(message: message, items: users, pattern: USER_PATTERN)
     resolved_message = sub_message_content(message: message, items: channels, pattern: CHANNEL_PATTERN)
     [resolved_message] # Caveat to making sure data types are consistent across attributes in MessageProcessor
+  end
+
+  def parse_url(message:, pattern:)
+    message.scan(pattern)
   end
 
   def parse_object(message:, pattern:)
